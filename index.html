@@ -3,8 +3,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Core Innovation Concepts — Software that gets out of your way</title>
+<title>Core Innovation Concepts · Software that gets out of your way</title>
 <meta name="description" content="Core Innovation Concepts builds small, focused software for real everyday problems. No bloat, no subscriptions you forgot about, no accounts you don't need."/>
+
+<!-- Favicon: the CIC core-mark, inline SVG data URI (no external file needed) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230B0F14'/%3E%3Cpath d='M32 6 54 18.5V45.5L32 58 10 45.5V18.5Z' fill='none' stroke='%232A3F55' stroke-width='2.5'/%3E%3Cpath d='M41 24a12 12 0 1 0 0 16' fill='none' stroke='%2322D3EE' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='32' r='4.5' fill='%23E6EEF7'/%3E%3C/svg%3E"/>
+
 <style>
   :root{
     --bg:#0B0F14; --panel:#131A22; --line:#1B2733; --edge:#2A3F55;
@@ -12,28 +16,55 @@
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{margin:0;background:var(--bg);color:var(--ink);
+  body{margin:0;background:
+        radial-gradient(1100px 620px at 50% -8%, rgba(34,211,238,.08), transparent 60%),
+        var(--bg);
+       color:var(--ink);
        font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;line-height:1.6}
   a{color:var(--accent);text-decoration:none}
   .wrap{max-width:960px;margin:0 auto;padding:0 20px}
 
-  header{padding:100px 0 70px;text-align:center}
-  .mark{display:inline-flex;align-items:center;gap:12px;margin-bottom:34px}
-  .mark svg{width:30px;height:30px}
-  .mark span{font-size:14px;font-weight:700;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+  /* ---- brand logo (reusable) ---- */
+  .brand{display:inline-flex;align-items:center;gap:14px}
+  .brand .logo{width:44px;height:44px;flex:none;display:block}
+  .brand .logo .ring{transform-origin:32px 32px;animation:spin 14s linear infinite}
+  .brand .logo .core{transform-origin:32px 32px;animation:pulse 3.2s ease-in-out infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+  @media(prefers-reduced-motion:reduce){
+    .brand .logo .ring,.brand .logo .core{animation:none}
+  }
+  .brand .name{display:flex;flex-direction:column;line-height:1.1}
+  .brand .name b{font-size:16px;font-weight:800;letter-spacing:.3px}
+  .brand .name small{font-size:10.5px;font-weight:700;letter-spacing:2.4px;
+                     color:var(--muted);text-transform:uppercase}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);
+      background:rgba(11,15,20,.72);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:66px}
+  nav .brand .logo{width:34px;height:34px}
+  nav .brand .name b{font-size:14.5px}
+
+  /* hero */
+  header{padding:96px 0 72px;text-align:center}
+  .heromark{display:flex;justify-content:center;margin-bottom:30px}
+  .heromark .logo{width:96px;height:96px}
   .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:2px;color:var(--accent);
            text-transform:uppercase;margin-bottom:18px}
-  h1{font-size:44px;line-height:1.2;margin:0 auto 22px;max-width:760px;letter-spacing:-.5px}
+  h1{font-size:46px;line-height:1.16;margin:0 auto 22px;max-width:780px;letter-spacing:-.6px}
   h1 .hl{color:var(--accent)}
-  .sub{color:var(--muted);font-size:18px;max-width:600px;margin:0 auto;line-height:1.65}
-  @media(max-width:640px){h1{font-size:32px}}
+  .sub{color:var(--muted);font-size:18px;max-width:610px;margin:0 auto;line-height:1.65}
+  @media(max-width:640px){h1{font-size:33px}.heromark .logo{width:78px;height:78px}}
 
   section{padding:56px 0;border-top:1px solid var(--line)}
   h2.sh{color:var(--accent);font-size:13px;letter-spacing:1.6px;text-transform:uppercase;
         margin:0 0 28px;text-align:center}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
   @media(max-width:640px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:26px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:26px;
+        transition:border-color .18s ease, transform .18s ease}
+  .card:hover{border-color:var(--edge);transform:translateY(-2px)}
   .card .num{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;
              border-radius:9px;background:#132430;border:1px solid var(--accent);color:var(--accent);
              font-weight:700;font-size:13px;margin-bottom:14px}
@@ -43,7 +74,8 @@
   .building{text-align:center;max-width:640px;margin:0 auto}
   .building p{color:var(--muted);font-size:16px;line-height:1.7}
 
-  footer{padding:40px 0 50px;border-top:1px solid var(--line);text-align:center}
+  footer{padding:44px 0 54px;border-top:1px solid var(--line)}
+  footer .wrap{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
   footer .row{color:var(--muted);font-size:13px}
   footer a{color:var(--muted)}
   footer a:hover{color:var(--accent)}
@@ -51,22 +83,48 @@
 </head>
 <body>
 
+<!-- ========== reusable logo (defined once, cloned via <use>) ========== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="cicEdge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2A3F55"/><stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
+    <g id="cicMark">
+      <!-- hexagon shell = the "concept" / building block -->
+      <path d="M32 5 55 18.25V44.75L32 58 9 44.75V18.25Z"
+            fill="#11161D" stroke="url(#cicEdge)" stroke-width="2.5"/>
+      <!-- orbiting spark -->
+      <g class="ring">
+        <circle cx="32" cy="12.5" r="2.4" fill="#22D3EE"/>
+      </g>
+      <!-- the "C" for Core -->
+      <path d="M42 23a13 13 0 1 0 0 18" fill="none" stroke="#22D3EE"
+            stroke-width="4.2" stroke-linecap="round"/>
+      <!-- innovation nucleus -->
+      <circle class="core" cx="32" cy="32" r="4.6" fill="#E6EEF7"/>
+    </g>
+  </defs>
+</svg>
+
+<nav>
+  <div class="wrap">
+    <span class="brand">
+      <svg class="logo" viewBox="0 0 64 64"><use href="#cicMark"/></svg>
+      <span class="name"><b>Core Innovation</b><small>Concepts</small></span>
+    </span>
+    <a href="mailto:CoreInnovationConcepts@gmail.com" style="font-size:13.5px;font-weight:600">Contact</a>
+  </div>
+</nav>
+
 <div class="wrap">
   <header>
-    <div class="mark">
-      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <rect x="1" y="1" width="30" height="30" rx="9" fill="#11161D" stroke="#2A3F55"/>
-        <path d="M11 16a5 5 0 0 1 5-5" stroke="#22D3EE" stroke-width="2" stroke-linecap="round"/>
-        <path d="M21 16a5 5 0 0 1-5 5" stroke="#22D3EE" stroke-width="2" stroke-linecap="round"/>
-        <circle cx="16" cy="16" r="2" fill="#E6EEF7"/>
-      </svg>
-      <span>Core Innovation Concepts</span>
+    <div class="heromark">
+      <svg class="logo" viewBox="0 0 64 64"><use href="#cicMark"/></svg>
     </div>
-
     <span class="eyebrow">Independent Software Studio</span>
     <h1>We build software that gets <span class="hl">out of your way.</span></h1>
     <p class="sub">Small, focused tools for real everyday problems. No bloat, no subscriptions you
-       forgot about, no accounts you don't need — just software that works, quietly, in the
+       forgot about, no accounts you don't need. Just software that works, quietly, in the
        background of your day.</p>
   </header>
 </div>
@@ -79,7 +137,7 @@
         <div class="num">01</div>
         <h3>One job, done well</h3>
         <p>We don't build do-everything suites. Every tool we ship solves one specific problem,
-           completely — and then gets out of the way.</p>
+           completely, and then gets out of the way.</p>
       </div>
       <div class="card">
         <div class="num">02</div>
@@ -90,7 +148,7 @@
       <div class="card">
         <div class="num">03</div>
         <h3>Privacy by default</h3>
-        <p>Local-first and offline-first wherever we possibly can. Your data is yours — we're not
+        <p>Local-first and offline-first wherever we possibly can. Your data is yours, and we're not
            in the business of collecting it.</p>
       </div>
       <div class="card">
@@ -106,7 +164,7 @@
     <h2 class="sh">What we're building</h2>
     <div class="building">
       <p>We're a small, independent studio currently developing a lineup of lightweight Windows
-         utilities — each one aimed at a single everyday annoyance, built to install in seconds and
+         utilities, each one aimed at a single everyday annoyance, built to install in seconds and
          then be forgotten about, because it just works. More on the way soon.</p>
     </div>
   </section>
@@ -114,7 +172,11 @@
 
 <footer>
   <div class="wrap">
-    <div class="row">Core Innovation Concepts · © 2026 · <a href="mailto:CoreInnovationConcepts@gmail.com">CoreInnovationConcepts@gmail.com</a></div>
+    <span class="brand">
+      <svg class="logo" viewBox="0 0 64 64" style="width:30px;height:30px"><use href="#cicMark"/></svg>
+      <span class="name"><b style="font-size:14px">Core Innovation</b><small>Concepts</small></span>
+    </span>
+    <div class="row">© 2026 · <a href="mailto:CoreInnovationConcepts@gmail.com">CoreInnovationConcepts@gmail.com</a></div>
   </div>
 </footer>
 
